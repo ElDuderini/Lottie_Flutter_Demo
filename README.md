@@ -1,10 +1,8 @@
 # lottie_demo
 
-A new Flutter project.
+A demo showcasing how to use lottie in flutter, showcasing a usecase where a progress bar can be made out of three different animations
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
+## Getting Started with flutter
 
 A few resources to get you started if this is your first Flutter project:
 

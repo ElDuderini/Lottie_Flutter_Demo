@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class RewardsProgress extends StatefulWidget {
-  const RewardsProgress({super.key});
+  const RewardsProgress({
+    super.key,
+    required this.rewardSteps,
+    required this.completedSteps,
+  });
 
   //Manage the logic of the positioned elements
+
+  final int rewardSteps;
+  final int completedSteps;
 
   @override
   State createState() => _RewardsProgressState();
@@ -15,15 +22,9 @@ class _RewardsProgressState extends State<RewardsProgress> with TickerProviderSt
 
   ScrollController scrollController = ScrollController();
 
-  late final int rewardSteps;
-
-  late final int completedSteps;
-
   @override
   void initState() {
-    completedSteps = 10;
-    rewardSteps = 10;
-    for (int i = 0; i <= rewardSteps; i++) {
+    for (int i = 0; i <= widget.rewardSteps; i++) {
       animationControllers.add(AnimationController(vsync: this));
     }
 
@@ -38,21 +39,25 @@ class _RewardsProgressState extends State<RewardsProgress> with TickerProviderSt
     super.dispose();
   }
 
+  //This function will be called after each animation completes, passing an higher index value each time
   void startAnimation(int animationIndex) {
-    if (animationIndex < rewardSteps && animationIndex <= completedSteps) {
+    if (animationIndex < widget.rewardSteps && animationIndex <= widget.completedSteps) {
       animationControllers[animationIndex].forward().whenComplete(() => startAnimation(animationIndex + 1));
     }
     //Every 5 steps, animate the scroll controller, unless it is at the end
-    if (animationIndex % 4 == 0 && animationIndex < rewardSteps && animationIndex <= completedSteps) {
+    if (animationIndex % 4 == 0 && animationIndex < widget.rewardSteps && animationIndex <= widget.completedSteps) {
+      //Scroll the controller based on what the current animation index is
       scrollController.animateTo(animationIndex * 80, duration: const Duration(seconds: 1), curve: Curves.easeIn);
     }
   }
 
+  //Determines which animation should be used in the reward step
+  //It can be 3 different animations, where a step is checked, where a step is halfway done and where all the steps are completed
   String currentLottiePath(int index) {
     String returnedString = "assets/check.json";
-    if (index == rewardSteps - 1) {
+    if (index == widget.rewardSteps - 1) {
       returnedString = "assets/finish.json";
-    } else if (index >= completedSteps) {
+    } else if (index >= widget.completedSteps) {
       returnedString = "assets/halfway.json";
     }
     return returnedString;
@@ -68,7 +73,7 @@ class _RewardsProgressState extends State<RewardsProgress> with TickerProviderSt
         fit: StackFit.passthrough,
         alignment: Alignment.centerLeft,
         children: [
-          for (int i = 0; i < rewardSteps; i++) ...[
+          for (int i = 0; i < widget.rewardSteps; i++) ...[
             Container(
               height: 75,
               margin: EdgeInsets.only(left: i * 75),
@@ -114,6 +119,8 @@ class _RewardStepLottieState extends State<RewardStepLottie> {
   @override
   void initState() {
     controller = widget.controller;
+    //When the animation starts, make the person visible
+    //The person will then become invisible after the animation is completed
     controller.addStatusListener((status) {
       if (status == AnimationStatus.forward) {
         setState(() => hideMan = false);
@@ -132,6 +139,7 @@ class _RewardStepLottieState extends State<RewardStepLottie> {
         controller: controller,
         delegates: LottieDelegates(
           values: [
+            //When the animation ends, the person outline will become transparent to keep them from being seen at the end of each step
             ValueDelegate.opacity(
               const ['**', 'man Outlines', '**'],
               value: hideMan ? 0 : 100,
@@ -139,6 +147,7 @@ class _RewardStepLottieState extends State<RewardStepLottie> {
           ],
         ), onLoaded: (composition) {
       controller.duration = composition.duration;
+      //If the widget is the first in the sequence, then start the animation which will create the chain reaction of the animations playing after eachother
       if (widget.isFirst) {
         controller.forward().whenComplete(() {
           widget.nextControllerCallback?.call(widget.controllerIndex);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottie_demo/rewards_drop_down.dart';
+import 'package:lottie_demo/rewards_progress.dart';
 
 void main() {
   runApp(const MyApp());
@@ -94,7 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RewardsProgress(),
+            //Change the rewardsteps to set how many total steps in the animation there can be, and completed steps for how far the animation will go
+            RewardsProgress(
+              rewardSteps: 10,
+              completedSteps: 4,
+            ),
           ],
         ),
       ),
