@@ -1,6 +1,12 @@
 # lottie_demo
 
-A demo showcasing how to use lottie in flutter, showcasing a usecase where a progress bar can be made out of three different animations
+A demo showcasing how to use lottie in flutter, showcasing a usecase where a progress bar can be made out of three different animations.
+
+Additional information about the lottie package
+https://pub.dev/packages/lottie
+
+Plus a place where you can edit and test lottie animations
+https://lottiefiles.com/
 
 ## Getting Started with flutter
 

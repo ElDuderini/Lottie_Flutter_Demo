@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //Change the rewardsteps to set how many total steps in the animation there can be, and completed steps for how far the animation will go
             RewardsProgress(
               rewardSteps: 10,
-              completedSteps: 4,
+              completedSteps: 10,
             ),
           ],
         ),
